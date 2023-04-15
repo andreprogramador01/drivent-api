@@ -1,3 +1,5 @@
+import { TicketStatus } from '@prisma/client';
+
 export type ApplicationError = {
   name: string;
   message: string;
@@ -26,4 +28,10 @@ export type RequestError = {
   statusText: string;
   name: string;
   message: string;
+};
+
+export type TicketParams = {
+  ticketTypeId: number;
+  enrollmentId: number;
+  status: TicketStatus;
 };

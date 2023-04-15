@@ -1,5 +1,6 @@
 import { Enrollment } from '@prisma/client';
 import { prisma } from '@/config';
+import { TicketParams } from '@/protocols';
 
 async function getAllTypeTickets() {
   return prisma.ticketType.findMany();
@@ -41,12 +42,35 @@ async function getTicketByEnrollmentId(enrollmentId: number) {
     },
   });
 }
+async function createNewTicket(ticketTypeId: number, enrollmentId: number) {
+  const status = 'RESERVED';
+  const data: TicketParams = {
+    ticketTypeId,
+    enrollmentId,
+    status,
+  };
+  return await prisma.ticket.create({
+    data,
+    include: {
+      TicketType: true,
+    },
+  });
+}
+async function getEnrollment(enrollmentId: number) {
+  return await prisma.enrollment.findFirst({
+    where: {
+      id: enrollmentId,
+    },
+  });
+}
 
 const ticketsRepository = {
+  createNewTicket,
   getAllTypeTickets,
   getAllTickets,
   getEnrollmentByUserId,
   getTicketByEnrollmentId,
+  getEnrollment,
 };
 
 export default ticketsRepository;
